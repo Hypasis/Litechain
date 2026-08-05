@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/holiman/uint256"
-	"github.com/sanketsaagar/lightchain-l1/pkg/consensus"
-	"github.com/sanketsaagar/lightchain-l1/pkg/execution"
+	"github.com/Hypasis/Litechain/pkg/consensus"
+	"github.com/Hypasis/Litechain/pkg/execution"
 )
 
 func TestNullifierDoubleSpendProtection(t *testing.T) {

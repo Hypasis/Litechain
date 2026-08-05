@@ -18,7 +18,7 @@ Before you begin, ensure you have:
 ### 1. Clone and Setup
 
 ```bash
-git clone https://github.com/sanketsaagar/Litechain.git
+git clone https://github.com/Hypasis/Litechain.git
 cd Litechain
 
 # Run the automated setup script

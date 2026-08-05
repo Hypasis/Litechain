@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/holiman/uint256"
-	"github.com/sanketsaagar/lightchain-l1/pkg/mempool"
+	"github.com/Hypasis/Litechain/pkg/mempool"
 )
 
 // ParallelExecutor implements Solana-style parallel transaction execution

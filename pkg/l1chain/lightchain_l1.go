@@ -9,14 +9,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/sanketsaagar/lightchain-l1/pkg/consensus"
-	"github.com/sanketsaagar/lightchain-l1/pkg/economics"
-	"github.com/sanketsaagar/lightchain-l1/pkg/execution"
-	"github.com/sanketsaagar/lightchain-l1/pkg/genesis"
-	"github.com/sanketsaagar/lightchain-l1/pkg/mempool"
-	"github.com/sanketsaagar/lightchain-l1/pkg/network"
-	"github.com/sanketsaagar/lightchain-l1/pkg/staking"
-	"github.com/sanketsaagar/lightchain-l1/pkg/zk"
+	"github.com/Hypasis/Litechain/pkg/consensus"
+	"github.com/Hypasis/Litechain/pkg/economics"
+	"github.com/Hypasis/Litechain/pkg/execution"
+	"github.com/Hypasis/Litechain/pkg/genesis"
+	"github.com/Hypasis/Litechain/pkg/mempool"
+	"github.com/Hypasis/Litechain/pkg/network"
+	"github.com/Hypasis/Litechain/pkg/staking"
+	"github.com/Hypasis/Litechain/pkg/zk"
 )
 
 // LightChainL1 represents the complete L1 blockchain implementation

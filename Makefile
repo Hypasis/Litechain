@@ -5,7 +5,7 @@
 # Build configuration
 BINARY_NAME=lightchain
 BUILD_DIR=build
-GO_MODULE=github.com/sanketsaagar/Litechain
+GO_MODULE=github.com/Hypasis/Litechain
 
 # Go configuration
 GO_VERSION=1.22
@@ -19,7 +19,7 @@ DOCKER_TAG=latest
 # Build metadata
 GIT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME ?= $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
-LDFLAGS = -ldflags "-X github.com/sanketsaagar/lightchain-l1/pkg/version.GitCommit=$(GIT_COMMIT) -X github.com/sanketsaagar/lightchain-l1/pkg/version.BuildTime=$(BUILD_TIME)"
+LDFLAGS = -ldflags "-X github.com/Hypasis/Litechain/pkg/version.GitCommit=$(GIT_COMMIT) -X github.com/Hypasis/Litechain/pkg/version.BuildTime=$(BUILD_TIME)"
 
 # L1 blockchain build
 build:

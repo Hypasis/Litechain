@@ -81,7 +81,7 @@ If you run Litechain as a systemd background service:
 sudo systemctl stop lightchain
 
 # 2. Download and replace binary
-curl -L -O https://github.com/sanketsaagar/Litechain/releases/download/v2.0.0/lightchain-v2.0.0-linux-amd64.tar.gz
+curl -L -O https://github.com/Hypasis/Litechain/releases/download/v2.0.0/lightchain-v2.0.0-linux-amd64.tar.gz
 tar -xzf lightchain-v2.0.0-linux-amd64.tar.gz
 sudo cp lightchain-v2.0.0-linux-amd64/lightchain /usr/local/bin/lightchain
 

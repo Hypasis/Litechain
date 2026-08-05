@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 ENCLAVE_NAME="lightbeam-testnet"
-PACKAGE_PATH="github.com/sanketsaagar/lightchain-l1/deployments/kurtosis"
+PACKAGE_PATH="github.com/Hypasis/Litechain/deployments/kurtosis"
 LOCAL_PACKAGE_PATH="./deployments/kurtosis"
 KURTOSIS_VERSION="0.89.0"
 

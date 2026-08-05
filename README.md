@@ -1,8 +1,8 @@
 # 🔐 Litechain L1 - ZK-Native, Block-STM & AI-Native Blockchain
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sanketsaagar/Litechain/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Hypasis/Litechain/blob/main/LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.25+-blue.svg)](https://golang.org)
-[![Status](https://img.shields.io/badge/Status-Production%20Hardened-brightgreen.svg)](https://github.com/sanketsaagar/Litechain)
+[![Status](https://img.shields.io/badge/Status-Production%20Hardened-brightgreen.svg)](https://github.com/Hypasis/Litechain)
 
 **Litechain** (`lightchain-l1`) is an advanced **ZK-native, Block-STM parallel, AI-native blockchain**. It combines production zero-knowledge cryptography (Consensys Gnark Groth16 over BN254), Monad/Aptos-style Block-STM optimistic parallel execution, native AI Agent accounts with delegated session keys, seedless Passkey (WebAuthn secp256r1) authentication, and protocol-level security defenses.
 
@@ -51,7 +51,7 @@ Litechain is designed to run efficiently on low-spec hardware (e.g. Raspberry Pi
 ### **Building & Running**
 ```bash
 # 1. Clone repository
-git clone https://github.com/sanketsaagar/Litechain.git
+git clone https://github.com/Hypasis/Litechain.git
 cd Litechain
 
 # 2. Build native binaries
