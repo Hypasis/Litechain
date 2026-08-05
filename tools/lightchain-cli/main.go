@@ -10,8 +10,17 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/sanketsaagar/lightchain-l1/pkg/sdk"
+	"github.com/sanketsaagar/lightchain-l1/pkg/version"
 	"github.com/spf13/cobra"
 )
+
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the CLI version and build metadata",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(version.FormattedVersion())
+	},
+}
 
 var (
 	nodeURL    string
@@ -355,6 +364,7 @@ func init() {
 	rootCmd.PersistentFlags().Int64Var(&chainID, "chain-id", 1001, "Chain ID (1001=LightChain, 1337=LightBeam testnet)")
 	
 	// Add all command groups
+	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(accountCmd)
 	rootCmd.AddCommand(txCmd)
 	rootCmd.AddCommand(contractCmd)
