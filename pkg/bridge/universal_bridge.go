@@ -1,7 +1,6 @@
 package bridge
 
 import (
-	"context"
 	"fmt"
 	"math/big"
 	"time"

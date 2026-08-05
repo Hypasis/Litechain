@@ -256,6 +256,10 @@ func newTransaction(tx *types.Transaction) *Transaction {
 }
 
 func newReceipt(receipt *types.Receipt) *Receipt {
+	var contractAddr *common.Address
+	if receipt.ContractAddress != (common.Address{}) {
+		contractAddr = &receipt.ContractAddress
+	}
 	return &Receipt{
 		TransactionHash:   receipt.TxHash,
 		TransactionIndex:  hexutil.Uint64(receipt.TransactionIndex),
@@ -263,7 +267,7 @@ func newReceipt(receipt *types.Receipt) *Receipt {
 		BlockNumber:       (*hexutil.Big)(receipt.BlockNumber),
 		CumulativeGasUsed: hexutil.Uint64(receipt.CumulativeGasUsed),
 		GasUsed:           hexutil.Uint64(receipt.GasUsed),
-		ContractAddress:   receipt.ContractAddress,
+		ContractAddress:   contractAddr,
 		Status:            hexutil.Uint64(receipt.Status),
 	}
 }
