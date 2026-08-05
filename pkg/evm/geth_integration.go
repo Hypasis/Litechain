@@ -1,7 +1,6 @@
 package evm
 
 import (
-	"context"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -10,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/holiman/uint256"
 )
 
 // EVMExecutor provides full Ethereum Virtual Machine compatibility
@@ -33,21 +33,19 @@ func NewEVMExecutor(chainID *big.Int, stateDB *state.StateDB) *EVMExecutor {
 func (e *EVMExecutor) ExecuteTransaction(tx *types.Transaction, header *types.Header) (*types.Receipt, error) {
 	// Create EVM context
 	blockContext := core.NewEVMBlockContext(header, e.blockchain, nil)
-	txContext := core.NewEVMTxContext(tx)
 	
 	// Initialize EVM
-	evm := vm.NewEVM(blockContext, txContext, e.stateDB, e.getChainConfig(), e.vmConfig)
+	evm := vm.NewEVM(blockContext, e.stateDB, e.getChainConfig(), e.vmConfig)
 	
 	// Execute transaction
+	gp := new(core.GasPool).AddGas(header.GasLimit)
 	result, err := core.ApplyTransaction(
-		e.getChainConfig(),
-		e.blockchain,
-		nil, // coinbase will be set by consensus
+		evm,
+		gp,
 		e.stateDB,
 		header,
 		tx,
 		&header.GasUsed,
-		evm,
 	)
 	
 	return result, err
@@ -82,19 +80,6 @@ func (e *EVMExecutor) DeployContract(from common.Address, code []byte, value *bi
 
 // CallContract calls a smart contract function
 func (e *EVMExecutor) CallContract(to common.Address, data []byte, value *big.Int) ([]byte, error) {
-	// Create call message
-	msg := &core.Message{
-		To:         &to,
-		From:       common.Address{}, // Will be set by caller
-		Value:      value,
-		Gas:        1000000, // Default gas limit
-		GasPrice:   e.getGasPrice(),
-		GasFeeCap:  e.getGasPrice(),
-		GasTipCap:  big.NewInt(0),
-		Data:       data,
-		AccessList: nil,
-	}
-	
 	// Create EVM context
 	header := &types.Header{
 		Number:     big.NewInt(1),
@@ -104,11 +89,14 @@ func (e *EVMExecutor) CallContract(to common.Address, data []byte, value *big.In
 	}
 	
 	blockContext := core.NewEVMBlockContext(header, e.blockchain, nil)
-	txContext := core.NewEVMTxContext(types.NewTx(&types.LegacyTx{}))
 	
 	// Initialize EVM and execute
-	evm := vm.NewEVM(blockContext, txContext, e.stateDB, e.getChainConfig(), e.vmConfig)
-	result, _, err := evm.Call(vm.AccountRef(msg.From), *msg.To, msg.Data, msg.Gas, msg.Value)
+	evm := vm.NewEVM(blockContext, e.stateDB, e.getChainConfig(), e.vmConfig)
+	val, _ := uint256.FromBig(value)
+	if val == nil {
+		val = new(uint256.Int)
+	}
+	result, _, err := evm.Call(common.Address{}, to, data, 1000000, val)
 	
 	return result, err
 }
@@ -120,19 +108,6 @@ func (e *EVMExecutor) GetContractCode(address common.Address) []byte {
 
 // EstimateGas estimates the gas needed for a transaction
 func (e *EVMExecutor) EstimateGas(from, to common.Address, data []byte, value *big.Int) (uint64, error) {
-	// Create estimation message
-	msg := &core.Message{
-		From:       from,
-		To:         &to,
-		Value:      value,
-		Gas:        10000000, // High gas limit for estimation
-		GasPrice:   e.getGasPrice(),
-		GasFeeCap:  e.getGasPrice(),
-		GasTipCap:  big.NewInt(0),
-		Data:       data,
-		AccessList: nil,
-	}
-	
 	// Run estimation (simplified)
 	header := &types.Header{
 		Number:     big.NewInt(1),
@@ -142,41 +117,26 @@ func (e *EVMExecutor) EstimateGas(from, to common.Address, data []byte, value *b
 	}
 	
 	blockContext := core.NewEVMBlockContext(header, e.blockchain, nil)
-	txContext := core.NewEVMTxContext(types.NewTx(&types.LegacyTx{}))
 	
-	evm := vm.NewEVM(blockContext, txContext, e.stateDB, e.getChainConfig(), e.vmConfig)
+	evm := vm.NewEVM(blockContext, e.stateDB, e.getChainConfig(), e.vmConfig)
+	val, _ := uint256.FromBig(value)
+	if val == nil {
+		val = new(uint256.Int)
+	}
 	
-	// Binary search for optimal gas (simplified implementation)
-	gasUsed, _, err := evm.Call(vm.AccountRef(msg.From), *msg.To, msg.Data, msg.Gas, msg.Value)
+	_, gasLeft, err := evm.Call(from, to, data, 10000000, val)
 	if err != nil {
 		return 0, err
 	}
 	
-	return msg.Gas - gasUsed, nil
+	return 10000000 - gasLeft, nil
 }
 
 // getChainConfig returns the chain configuration compatible with Ethereum
 func (e *EVMExecutor) getChainConfig() *params.ChainConfig {
-	return &params.ChainConfig{
-		ChainID:                 e.chainID,
-		HomesteadBlock:          big.NewInt(0),
-		EIP150Block:             big.NewInt(0),
-		EIP155Block:             big.NewInt(0),
-		EIP158Block:             big.NewInt(0),
-		ByzantiumBlock:          big.NewInt(0),
-		ConstantinopleBlock:     big.NewInt(0),
-		PetersburgBlock:         big.NewInt(0),
-		IstanbulBlock:           big.NewInt(0),
-		BerlinBlock:             big.NewInt(0),
-		LondonBlock:             big.NewInt(0),
-		ArrowGlacierBlock:       big.NewInt(0),
-		GrayGlacierBlock:        big.NewInt(0),
-		MergeNetsplitBlock:      big.NewInt(0),
-		ShanghaiBlock:           big.NewInt(0),
-		CancunBlock:             big.NewInt(0),
-		PragueBlock:             big.NewInt(0),
-		VerkleBlock:             big.NewInt(0),
-	}
+	cfg := *params.AllEthashProtocolChanges
+	cfg.ChainID = e.chainID
+	return &cfg
 }
 
 // getGasPrice returns current gas price
@@ -187,7 +147,7 @@ func (e *EVMExecutor) getGasPrice() *big.Int {
 
 // GetBalance returns the balance of an account
 func (e *EVMExecutor) GetBalance(address common.Address) *big.Int {
-	return e.stateDB.GetBalance(address)
+	return e.stateDB.GetBalance(address).ToBig()
 }
 
 // GetNonce returns the nonce of an account

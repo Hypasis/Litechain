@@ -11,6 +11,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/holiman/uint256"
 	"github.com/sanketsaagar/lightchain-l1/pkg/mempool"
 )
 
@@ -24,6 +25,7 @@ type ParallelExecutor struct {
 	workers     []*ExecutionWorker
 	workerCount int
 	batchSize   int
+	blockSTM    *BlockSTMExecutor
 
 	// State management
 	snapshots map[int]*StateSnapshot
@@ -302,6 +304,7 @@ func NewParallelExecutor(chainID *big.Int, config *ParallelConfig) *ParallelExec
 		chainID:     chainID,
 		workerCount: config.WorkerCount,
 		batchSize:   config.BatchSize,
+		blockSTM:    NewBlockSTMExecutor(chainID, config.WorkerCount),
 		snapshots:   make(map[int]*StateSnapshot),
 		conflicts:   NewConflictTracker(),
 		scheduler:   NewTransactionScheduler(),
@@ -319,6 +322,20 @@ func NewParallelExecutor(chainID *big.Int, config *ParallelConfig) *ParallelExec
 	go pe.conflictResolver()
 
 	return pe
+}
+
+// GetBlockSTM returns the underlying BlockSTMExecutor instance
+func (pe *ParallelExecutor) GetBlockSTM() *BlockSTMExecutor {
+	pe.mu.RLock()
+	defer pe.mu.RUnlock()
+	return pe.blockSTM
+}
+
+// ExecuteBlockSTM executes a slice of Ethereum transactions using Block-STM optimistic concurrency control
+func (pe *ParallelExecutor) ExecuteBlockSTM(txs []*types.Transaction, initialBalances map[common.Address]*uint256.Int) ([]*types.Receipt, uint64, int, time.Duration, error) {
+	pe.mu.RLock()
+	defer pe.mu.RUnlock()
+	return pe.blockSTM.ExecuteBlockSTM(txs, initialBalances)
 }
 
 // ExecuteParallel executes a batch of transactions in parallel

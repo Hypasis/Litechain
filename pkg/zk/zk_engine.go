@@ -19,6 +19,7 @@ type ZKEngine struct {
 	snarkProver  *SNARKProver
 	starkProver  *STARKProver
 	bulletProver *BulletproofProver
+	gnarkProver  *GnarkProver
 
 	// ZK Rollup support
 	rollupManager   *ZKRollupManager
@@ -234,10 +235,16 @@ func NewZKEngine(config *ZKConfig) *ZKEngine {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
+	gnarkProver, err := NewGnarkProver()
+	if err != nil {
+		fmt.Printf("⚠️  Gnark Prover initialization warning: %v\n", err)
+	}
+
 	zk := &ZKEngine{
 		snarkProver:     NewSNARKProver(),
 		starkProver:     NewSTARKProver(),
 		bulletProver:    NewBulletproofProver(),
+		gnarkProver:     gnarkProver,
 		rollupManager:   NewZKRollupManager(config),
 		proofAggregator: NewProofAggregator(),
 		privatePool:     NewPrivateTransactionPool(config),
@@ -523,6 +530,13 @@ func (zk *ZKEngine) GetZKCapabilities() map[string]interface{} {
 			"batch_proof_size": zk.config.BatchProofSize,
 		},
 	}
+}
+
+// GetGnarkProver returns the underlying production Gnark ZK-SNARK prover instance
+func (zk *ZKEngine) GetGnarkProver() *GnarkProver {
+	zk.mu.RLock()
+	defer zk.mu.RUnlock()
+	return zk.gnarkProver
 }
 
 // Stop shuts down the ZK engine

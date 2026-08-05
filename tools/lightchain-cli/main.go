@@ -6,7 +6,6 @@ import (
 	"log"
 	"math/big"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -18,7 +17,7 @@ var (
 	nodeURL    string
 	privateKey string
 	chainID    int64
-	sdk        *sdk.LightChainSDK
+	cliSDK     *sdk.LightChainSDK
 )
 
 var rootCmd = &cobra.Command{
@@ -34,7 +33,7 @@ var rootCmd = &cobra.Command{
 		}
 		
 		var err error
-		sdk, err = sdk.NewSDK(config)
+		cliSDK, err = sdk.NewSDK(config)
 		if err != nil {
 			log.Fatalf("Failed to initialize SDK: %v", err)
 		}
@@ -51,7 +50,7 @@ var createAccountCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new account",
 	Run: func(cmd *cobra.Command, args []string) {
-		account, err := sdk.CreateAccount()
+		account, err := cliSDK.CreateAccount()
 		if err != nil {
 			log.Fatalf("Failed to create account: %v", err)
 		}
@@ -69,12 +68,12 @@ var balanceCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		address := common.HexToAddress(args[0])
-		balance, err := sdk.GetBalance(address)
+		balance, err := cliSDK.GetBalance(address)
 		if err != nil {
 			log.Fatalf("Failed to get balance: %v", err)
 		}
 		
-		balanceEther := sdk.FromWei(balance)
+		balanceEther := cliSDK.FromWei(balance)
 		fmt.Printf("Balance: %.6f LIGHT (%s wei)\n", balanceEther, balance.String())
 	},
 }
@@ -98,9 +97,10 @@ var sendCmd = &cobra.Command{
 			log.Fatalf("Invalid amount: %s", amountStr)
 		}
 		
-		amountWei := sdk.ToWei(amount)
+		amountFloat, _ := amount.Float64()
+		amountWei := cliSDK.ToWei(amountFloat)
 		
-		tx, err := sdk.SendTransaction(to, amountWei, nil)
+		tx, err := cliSDK.SendTransaction(to, amountWei, nil)
 		if err != nil {
 			log.Fatalf("Failed to send transaction: %v", err)
 		}
@@ -112,7 +112,7 @@ var sendCmd = &cobra.Command{
 		
 		// Wait for confirmation
 		fmt.Println("⏳ Waiting for confirmation...")
-		receipt, err := sdk.WaitForTransaction(tx.Hash())
+		receipt, err := cliSDK.WaitForTransaction(tx.Hash())
 		if err != nil {
 			log.Printf("❌ Failed to get confirmation: %v", err)
 			return
@@ -132,7 +132,7 @@ var receiptCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		txHash := common.HexToHash(args[0])
-		receipt, err := sdk.GetTransactionReceipt(txHash)
+		receipt, err := cliSDK.GetTransactionReceipt(txHash)
 		if err != nil {
 			log.Fatalf("Failed to get receipt: %v", err)
 		}
@@ -143,7 +143,7 @@ var receiptCmd = &cobra.Command{
 		fmt.Printf("  Status: %d\n", receipt.Status)
 		fmt.Printf("  Gas Used: %d\n", receipt.GasUsed)
 		
-		if receipt.ContractAddress != nil {
+		if receipt.ContractAddress != (common.Address{}) {
 			fmt.Printf("  Contract Address: %s\n", receipt.ContractAddress.Hex())
 		}
 	},
@@ -166,7 +166,7 @@ var deployCmd = &cobra.Command{
 		}
 		
 		// Simplified deployment
-		deployment, err := sdk.DeployContract("", bytecode)
+		deployment, err := cliSDK.DeployContract("", bytecode)
 		if err != nil {
 			log.Fatalf("Failed to deploy contract: %v", err)
 		}
@@ -191,7 +191,7 @@ var callCmd = &cobra.Command{
 			callParams = append(callParams, param)
 		}
 		
-		result, err := sdk.CallContract(contractAddress, methodName, callParams...)
+		result, err := cliSDK.CallContract(contractAddress, methodName, callParams...)
 		if err != nil {
 			log.Fatalf("Failed to call contract: %v", err)
 		}
@@ -217,9 +217,10 @@ var stakeTokensCmd = &cobra.Command{
 			log.Fatalf("Invalid amount: %s", amountStr)
 		}
 		
-		amountWei := sdk.ToWei(amount)
+		amountFloat, _ := amount.Float64()
+		amountWei := cliSDK.ToWei(amountFloat)
 		
-		tx, err := sdk.StakeTokens(amountWei)
+		tx, err := cliSDK.StakeTokens(amountWei)
 		if err != nil {
 			log.Fatalf("Failed to stake tokens: %v", err)
 		}
@@ -236,15 +237,15 @@ var stakingInfoCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		validator := common.HexToAddress(args[0])
-		info, err := sdk.GetStakingInfo(validator)
+		info, err := cliSDK.GetStakingInfo(validator)
 		if err != nil {
 			log.Fatalf("Failed to get staking info: %v", err)
 		}
 		
 		fmt.Printf("Staking Information:\n")
 		fmt.Printf("  Validator: %s\n", info.Validator.Hex())
-		fmt.Printf("  Staked Amount: %s LIGHT\n", sdk.FromWei(info.StakedAmount))
-		fmt.Printf("  Rewards: %s LIGHT\n", sdk.FromWei(info.Rewards))
+		fmt.Printf("  Staked Amount: %.6f LIGHT\n", cliSDK.FromWei(info.StakedAmount))
+		fmt.Printf("  Rewards: %.6f LIGHT\n", cliSDK.FromWei(info.Rewards))
 		fmt.Printf("  Performance: %.2f%%\n", info.Performance*100)
 		fmt.Printf("  Active: %v\n", info.IsActive)
 	},
