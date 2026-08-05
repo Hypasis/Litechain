@@ -14,11 +14,11 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/sanketsaagar/lightchain-l1/pkg/l1chain"
+	"github.com/sanketsaagar/lightchain-l1/pkg/version"
 )
 
 const (
-	appName = "LightChain L1"
-	version = "v1.0.0"
+	appName = "Litechain L1"
 )
 
 func main() {
@@ -34,14 +34,14 @@ func main() {
 	)
 	flag.Parse()
 
-	if *showVersion {
-		fmt.Printf("%s %s\n", appName, version)
+	if *showVersion || (len(os.Args) > 1 && os.Args[1] == "version") {
+		fmt.Println(version.FormattedVersion())
 		os.Exit(0)
 	}
 
 	// Initialize logger
 	logger := setupLogger(*logLevel)
-	logger.Printf("🌟 Starting %s %s", appName, version)
+	logger.Printf("🌟 Starting %s v%s", appName, version.Version)
 	logger.Printf("   • Node Type: %s", *nodeType)
 	logger.Printf("   • Chain ID: %d", *chainID)
 	logger.Printf("   • Data Directory: %s", *dataDir)

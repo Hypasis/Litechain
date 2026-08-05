@@ -16,12 +16,18 @@ GOARCH ?= $(shell go env GOARCH)
 DOCKER_IMAGE=lightchain-l1
 DOCKER_TAG=latest
 
+# Build metadata
+GIT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_TIME ?= $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
+LDFLAGS = -ldflags "-X github.com/sanketsaagar/lightchain-l1/pkg/version.GitCommit=$(GIT_COMMIT) -X github.com/sanketsaagar/lightchain-l1/pkg/version.BuildTime=$(BUILD_TIME)"
+
 # L1 blockchain build
 build:
-	@echo "🔨 Building LightChain L1 Independent Blockchain..."
+	@echo "🔨 Building Litechain L1 Independent Blockchain (v2.0.0)..."
 	@mkdir -p $(BUILD_DIR)
-	@go build -o $(BUILD_DIR)/$(BINARY_NAME) ./cmd/lightchain
-	@echo "✅ Build complete: $(BUILD_DIR)/$(BINARY_NAME)"
+	@go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) ./cmd/lightchain
+	@go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-cli ./tools/lightchain-cli
+	@echo "✅ Build complete: $(BUILD_DIR)/$(BINARY_NAME) & $(BUILD_DIR)/$(BINARY_NAME)-cli"
 
 # Clean build artifacts
 clean:
