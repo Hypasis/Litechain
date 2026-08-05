@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/sanketsaagar/lightchain-l1/pkg/sdk"
-	"github.com/sanketsaagar/lightchain-l1/pkg/version"
+	"github.com/Hypasis/Litechain/pkg/sdk"
+	"github.com/Hypasis/Litechain/pkg/version"
 	"github.com/spf13/cobra"
 )
 

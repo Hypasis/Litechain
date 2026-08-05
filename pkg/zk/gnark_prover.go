@@ -14,7 +14,7 @@ import (
 	"github.com/consensys/gnark/constraint"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
-	"github.com/sanketsaagar/lightchain-l1/pkg/zk/circuits"
+	"github.com/Hypasis/Litechain/pkg/zk/circuits"
 )
 
 // GnarkProver manages real Groth16 ZK-SNARK proving and verification over BN254.

@@ -119,8 +119,8 @@ func (mp *MemPool) analyzeDependencies(tx *PoolTransaction) {
 ### **1. Quick Performance Test**
 ```bash
 # Clone and build
-git clone https://github.com/sanketsaagar/lightchain-l1.git
-cd lightchain-l1
+git clone https://github.com/Hypasis/Litechain.git
+cd Litechain
 make build
 
 # Run performance benchmark

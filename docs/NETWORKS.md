@@ -254,7 +254,7 @@ configs/
 - **Email**: support@lightchain.network
 
 ### **Developer Support**
-- **GitHub Issues**: [github.com/sanketsaagar/lightchain-l1/issues](https://github.com/sanketsaagar/lightchain-l1/issues)
+- **GitHub Issues**: [github.com/Hypasis/Litechain/issues](https://github.com/Hypasis/Litechain/issues)
 - **Documentation**: [docs.lightchain.network](https://docs.lightchain.network)
 - **Developer Discord**: #dev-support channel
 

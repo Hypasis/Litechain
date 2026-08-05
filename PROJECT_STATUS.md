@@ -1,8 +1,8 @@
 # 📊 Litechain Project Status
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sanketsaagar/Litechain/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Hypasis/Litechain/blob/main/LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.25+-blue.svg)](https://golang.org)
-[![Status](https://img.shields.io/badge/Status-Production%20Hardened-brightgreen.svg)](https://github.com/sanketsaagar/Litechain)
+[![Status](https://img.shields.io/badge/Status-Production%20Hardened-brightgreen.svg)](https://github.com/Hypasis/Litechain)
 
 ## ✅ **COMPLETED ARCHITECTURAL INNOVATIONS**
 
@@ -41,11 +41,11 @@
 
 ```bash
 $ go build ./... && go test ./...
-ok  	github.com/sanketsaagar/lightchain-l1/pkg/account	1.376s
-ok  	github.com/sanketsaagar/lightchain-l1/pkg/agent	1.084s
-ok  	github.com/sanketsaagar/lightchain-l1/pkg/execution	0.747s
-ok  	github.com/sanketsaagar/lightchain-l1/pkg/security	0.706s
-ok  	github.com/sanketsaagar/lightchain-l1/pkg/zk	2.701s
+ok  	github.com/Hypasis/Litechain/pkg/account	1.376s
+ok  	github.com/Hypasis/Litechain/pkg/agent	1.084s
+ok  	github.com/Hypasis/Litechain/pkg/execution	0.747s
+ok  	github.com/Hypasis/Litechain/pkg/security	0.706s
+ok  	github.com/Hypasis/Litechain/pkg/zk	2.701s
 # 100% CLEAN BUILD & TEST SUCCESS ACROSS ALL PACKAGES
 ```
 

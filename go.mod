@@ -1,4 +1,4 @@
-module github.com/sanketsaagar/lightchain-l1
+module github.com/Hypasis/Litechain
 
 go 1.25.0
 

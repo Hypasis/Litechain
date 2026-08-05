@@ -10,7 +10,7 @@ VERSION_NO_V="${VERSION#v}"
 DIST_DIR="dist/${VERSION}"
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
-LDFLAGS="-X github.com/sanketsaagar/lightchain-l1/pkg/version.GitCommit=${GIT_COMMIT} -X github.com/sanketsaagar/lightchain-l1/pkg/version.BuildTime=${BUILD_TIME} -X github.com/sanketsaagar/lightchain-l1/pkg/version.Version=${VERSION_NO_V}"
+LDFLAGS="-X github.com/Hypasis/Litechain/pkg/version.GitCommit=${GIT_COMMIT} -X github.com/Hypasis/Litechain/pkg/version.BuildTime=${BUILD_TIME} -X github.com/Hypasis/Litechain/pkg/version.Version=${VERSION_NO_V}"
 
 echo "📦 Generating Litechain Release Assets for ${VERSION}..."
 echo "   • Git Commit: ${GIT_COMMIT}"

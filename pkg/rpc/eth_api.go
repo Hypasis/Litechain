@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/sanketsaagar/lightchain-l1/pkg/evm"
+	"github.com/Hypasis/Litechain/pkg/evm"
 )
 
 // EthAPI provides Ethereum-compatible JSON-RPC API
